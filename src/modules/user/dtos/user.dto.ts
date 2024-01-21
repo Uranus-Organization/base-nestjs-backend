@@ -1,17 +1,17 @@
-import { AbstractDto } from '../../../common/dto/abstract.dto';
+import { AbstractCiDto } from '../../../common/dto/abstract-ci.dto';
 import { EmailFieldOptional, StringFieldOptional } from '../../../decorators';
 import { type UserEntity } from '../user.entity';
 
-export class UserDto extends AbstractDto {
+export class UserDto extends AbstractCiDto {
   @EmailFieldOptional({ nullable: false })
   email?: string;
 
   @StringFieldOptional({ nullable: false })
-  fullName?: string;
+  name?: string;
 
   constructor(user: UserEntity) {
     super(user);
     this.email = user.email;
-    this.fullName = user.fullName;
+    this.name = user.name;
   }
 }

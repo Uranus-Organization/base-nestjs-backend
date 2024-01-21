@@ -7,6 +7,7 @@ import {
 export function AuthGuard(
   options?: Partial<{ public: boolean }>,
 ): Type<IAuthGuard> {
+  console.info('helloworld');
   const strategies = ['jwt'];
 
   if (options?.public) {

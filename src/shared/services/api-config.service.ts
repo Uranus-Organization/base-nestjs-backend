@@ -108,6 +108,58 @@ export class ApiConfigService {
     };
   }
 
+  get mysqlConfig(): TypeOrmModuleOptions {
+    let entities = [
+      __dirname + '/../../modules/**/*.entity{.ts,.js}',
+      __dirname + '/../../modules/**/*.view-entity{.ts,.js}',
+    ];
+    let migrations = [__dirname + '/../../database/migrations/*{.ts,.js}'];
+
+    if (module.hot) {
+      const entityContext = require.context(
+        './../../modules',
+        true,
+        /\.entity\.ts$/,
+      );
+      entities = entityContext.keys().map((id) => {
+        const entityModule = entityContext<Record<string, unknown>>(id);
+        const [entity] = Object.values(entityModule);
+
+        return entity as string;
+      });
+      const migrationContext = require.context(
+        './../../database/migrations',
+        false,
+        /\.ts$/,
+      );
+
+      migrations = migrationContext.keys().map((id) => {
+        const migrationModule = migrationContext<Record<string, unknown>>(id);
+        const [migration] = Object.values(migrationModule);
+
+        return migration as string;
+      });
+    }
+
+    return {
+      entities,
+      migrations,
+      keepConnectionAlive: !this.isTest,
+      dropSchema: this.isTest,
+      type: 'mysql',
+      name: 'default',
+      host: this.getString('DB_HOST'),
+      port: this.getNumber('DB_PORT'),
+      username: this.getString('DB_USERNAME'),
+      password: this.getString('DB_PASSWORD'),
+      database: this.getString('DB_DATABASE'),
+      subscribers: [UserSubscriber],
+      migrationsRun: true,
+      logging: this.getBoolean('ENABLE_ORM_LOGS'),
+      namingStrategy: new SnakeNamingStrategy(),
+    };
+  }
+
   get awsS3Config() {
     return {
       bucketRegion: this.getString('AWS_S3_BUCKET_REGION'),
@@ -135,6 +187,7 @@ export class ApiConfigService {
     return {
       privateKey: this.getString('JWT_PRIVATE_KEY'),
       publicKey: this.getString('JWT_PUBLIC_KEY'),
+      secretKey: this.getString('JWT_SECRET_KEY'),
       jwtExpirationTime: this.getNumber('JWT_EXPIRATION_TIME'),
     };
   }

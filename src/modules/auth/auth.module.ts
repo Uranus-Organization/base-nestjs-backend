@@ -4,31 +4,27 @@ import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { ApiConfigService } from '../../shared/services/api-config.service';
-import { AdminEntity } from '../admin/entities/admin.entity';
+import { UserEntity } from '../user/user.entity';
 import { UserModule } from '../user/user.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
 import { PublicStrategy } from './public.strategy';
-import { UserEntity } from '../user/user.entity';
-import { AdminModule } from '../admin/admin.module';
 
 @Module({
   imports: [
     forwardRef(() => UserModule),
-    forwardRef(() => AdminModule),
-    TypeOrmModule.forFeature([UserEntity, AdminEntity]),
+    TypeOrmModule.forFeature([UserEntity]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       useFactory: (configService: ApiConfigService) => ({
-        privateKey: configService.authConfig.privateKey,
-        publicKey: configService.authConfig.publicKey,
+        secretOrPrivateKey: configService.authConfig.secretKey,
         signOptions: {
-          algorithm: 'RS256',
+          algorithm: 'none',
           expiresIn: configService.getNumber('JWT_EXPIRATION_TIME'),
         },
         verifyOptions: {
-          algorithms: ['RS256'],
+          algorithms: ['none'],
         },
       }),
       inject: [ApiConfigService],

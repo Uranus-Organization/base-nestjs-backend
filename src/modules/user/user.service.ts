@@ -2,11 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { type FindOptionsWhere, Repository } from 'typeorm';
 
-import { type PageDto } from '../../common/dto/page.dto';
 import { UserNotFoundException } from '../../exceptions';
 import { type UserRegisterDto } from '../auth/dtos/user-register.dto';
 import { type UserDto } from './dtos/user.dto';
-import { type UsersPageOptionsDto } from './dtos/users-page-options.dto';
 import { UserEntity } from './user.entity';
 
 @Injectable()
@@ -31,14 +29,14 @@ export class UserService {
     return user;
   }
 
-  async getUsers(
-    pageOptionsDto: UsersPageOptionsDto,
-  ): Promise<PageDto<UserDto>> {
-    const queryBuilder = this.userRepository.createQueryBuilder('user');
-    const [items, pageMetaDto] = await queryBuilder.paginate(pageOptionsDto);
-
-    return items.toPageDto(pageMetaDto);
-  }
+  // async getUsers(
+  //   pageOptionsDto: UsersPageOptionsDto,
+  // ): Promise<PageDto<UserDto>> {
+  //   const queryBuilder = this.userRepository.createQueryBuilder('user');
+  //   const [items, pageMetaDto] = await queryBuilder.paginate(pageOptionsDto);
+  //
+  //   return items.toPageDto(pageMetaDto);
+  // }
 
   async getUser(userId: string): Promise<UserDto> {
     const queryBuilder = this.userRepository.createQueryBuilder('user');

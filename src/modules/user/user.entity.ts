@@ -1,13 +1,13 @@
 import { Exclude } from 'class-transformer';
 import { Column, Entity } from 'typeorm';
 
-import { AbstractEntity } from '../../common/abstract.entity';
+import { AbstractCiEntity } from '../../common/abstract-ci.entity';
 import { UseDto } from '../../decorators';
 import { UserDto } from './dtos/user.dto';
 
-@Entity({ name: 'users' })
+@Entity({ name: 'user' })
 @UseDto(UserDto)
-export class UserEntity extends AbstractEntity<UserDto> {
+export class UserEntity extends AbstractCiEntity<UserDto> {
   @Column({ unique: true, nullable: false, type: 'varchar' })
   email!: string;
 
@@ -16,5 +16,5 @@ export class UserEntity extends AbstractEntity<UserDto> {
   password!: string;
 
   @Column({ nullable: false, type: 'varchar' })
-  fullName!: string;
+  name!: string;
 }
