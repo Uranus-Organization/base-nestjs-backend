@@ -19,13 +19,11 @@ export abstract class AbstractCiEntity<
 
   @CreateDateColumn({
     type: 'timestamp',
-    name: 'createdAt',
   })
   createdAt!: Date;
 
   @UpdateDateColumn({
     type: 'timestamp',
-    name: 'updatedAt',
   })
   updatedAt!: Date;
 

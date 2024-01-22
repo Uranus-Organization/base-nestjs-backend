@@ -13,6 +13,7 @@ import { type RoleType } from '../constants';
 import { AuthGuard } from '../guards/auth.guard';
 import { RolesGuard } from '../guards/roles.guard';
 import { AuthUserInterceptor } from '../interceptors/auth-user-interceptor.service';
+import { FormatResponseInterceptor } from '../interceptors/format-response-interceptor.service';
 import { PublicRoute } from './public-route.decorator';
 import { Roles } from './roles.decorator';
 
@@ -26,7 +27,7 @@ export function Auth(
     Roles(roles),
     UseGuards(AuthGuard({ public: isPublicRoute }), RolesGuard),
     ApiBearerAuth(),
-    UseInterceptors(AuthUserInterceptor),
+    UseInterceptors(AuthUserInterceptor, FormatResponseInterceptor),
     ApiUnauthorizedResponse({ description: 'Unauthorized' }),
     PublicRoute(isPublicRoute),
   );
